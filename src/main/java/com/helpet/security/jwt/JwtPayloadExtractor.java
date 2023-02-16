@@ -2,12 +2,15 @@ package com.helpet.security.jwt;
 
 import org.springframework.security.oauth2.jwt.Jwt;
 
+import java.util.List;
 import java.util.UUID;
 
 public class JwtPayloadExtractor {
     private static final String ID_CLAIM_KEY = "sub";
 
     private static final String USERNAME_CLAIM_KEY = "username";
+
+    private static final String ROLES_CLAIM_KEY = "roles";
 
     private static final String FIRST_NAME_CLAIM_KEY = "firstName";
 
@@ -27,6 +30,10 @@ public class JwtPayloadExtractor {
 
     public static String extractUsername(Jwt jwt) {
         return jwt.getClaimAsString(USERNAME_CLAIM_KEY);
+    }
+
+    public static List<String> extractRoles(Jwt jwt) {
+        return jwt.getClaimAsStringList(ROLES_CLAIM_KEY);
     }
 
     public static String extractFirstName(Jwt jwt) {
