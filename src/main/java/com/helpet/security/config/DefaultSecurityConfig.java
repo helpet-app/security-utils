@@ -1,12 +1,13 @@
 package com.helpet.security.config;
 
-import com.helpet.security.jwt.KeycloakJwtAuthenticationConverter;
-import com.helpet.security.jwt.KeycloakJwtGrantedAuthoritiesConverter;
+import com.helpet.security.jwt.JwtAuthenticationConverter;
+import com.helpet.security.jwt.JwtGrantedAuthoritiesConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableMethodSecurity(jsr250Enabled = true)
@@ -20,22 +21,24 @@ public class DefaultSecurityConfig {
                 .authenticated()
         );
 
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.csrf().disable();
 
         http.oauth2ResourceServer()
             .jwt()
-            .jwtAuthenticationConverter(keycloakJwtAuthenticationConverter());
+            .jwtAuthenticationConverter(jwtAuthenticationConverter());
 
         return http.build();
     }
 
     @Bean
-    public KeycloakJwtGrantedAuthoritiesConverter keycloakJwtGrantedAuthoritiesConverter() {
-        return new KeycloakJwtGrantedAuthoritiesConverter();
+    public JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter() {
+        return new JwtGrantedAuthoritiesConverter();
     }
 
     @Bean
-    public KeycloakJwtAuthenticationConverter keycloakJwtAuthenticationConverter() {
-        return new KeycloakJwtAuthenticationConverter(keycloakJwtGrantedAuthoritiesConverter());
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        return new JwtAuthenticationConverter(jwtGrantedAuthoritiesConverter());
     }
 }

@@ -7,29 +7,24 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.util.Collection;
+import java.util.Objects;
 
-public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
-    private static final String USERNAME_CLAIM_KEY = "username";
-
+public class JwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
     private final Converter<Jwt, Collection<GrantedAuthority>> grantedAuthoritiesConverter;
 
-    public KeycloakJwtAuthenticationConverter(Converter<Jwt, Collection<GrantedAuthority>> grantedAuthoritiesConverter) {
+    public JwtAuthenticationConverter(Converter<Jwt, Collection<GrantedAuthority>> grantedAuthoritiesConverter) {
         this.grantedAuthoritiesConverter = grantedAuthoritiesConverter;
     }
 
     @Override
-    public JwtAuthenticationToken convert(Jwt jwt) {
+    public AbstractAuthenticationToken convert(Jwt jwt) {
         Collection<GrantedAuthority> authorities = grantedAuthoritiesConverter.convert(jwt);
-        String username = extractUsername(jwt);
 
-        return new JwtAuthenticationToken(jwt, authorities, username);
-    }
-
-    private String extractUsername(Jwt jwt) {
-        if (jwt.hasClaim(USERNAME_CLAIM_KEY)) {
-            return jwt.getClaimAsString(USERNAME_CLAIM_KEY);
+        String username = JwtPayloadExtractor.extractUsername(jwt) ;
+        if (Objects.isNull(username)) {
+            username = jwt.getSubject();
         }
 
-        return jwt.getSubject();
+        return new JwtAuthenticationToken(jwt, authorities, username);
     }
 }
