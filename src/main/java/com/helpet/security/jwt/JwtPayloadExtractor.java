@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class JwtPayloadExtractor {
-    private static final String ID_CLAIM_KEY = "sub";
-
     private static final String USERNAME_CLAIM_KEY = "username";
 
     private static final String ROLES_CLAIM_KEY = "roles";
@@ -22,10 +20,20 @@ public class JwtPayloadExtractor {
 
     private static final String EMAIL_VERIFIED_CLAIM_KEY = "emailVerified";
 
+    private static final String SESSION_ID_CLAIM_KEY = "sid";
+
     private JwtPayloadExtractor() {}
 
     public static UUID extractId(Jwt jwt) {
-        return UUID.fromString(jwt.getClaimAsString(ID_CLAIM_KEY));
+        return UUID.fromString(jwt.getId());
+    }
+
+    public static UUID extractSubject(Jwt jwt) {
+        return UUID.fromString(jwt.getSubject());
+    }
+
+    public static UUID extractSessionId(Jwt jwt) {
+        return UUID.fromString(jwt.getClaimAsString(SESSION_ID_CLAIM_KEY));
     }
 
     public static String extractUsername(Jwt jwt) {
