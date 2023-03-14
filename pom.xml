@@ -45,7 +45,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Helpet Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/helpet-inc/backend-maven-repository</url>
+            <url>https://maven.pkg.github.com/helpet-app/backend-maven-repository</url>
         </repository>
     </distributionManagement>
 </project>
